@@ -1,6 +1,7 @@
 package com.learning.utils.lock.annotation;
 
-import com.learning.utils.lock.mysql.MysqlLockImpl;
+import javax.annotation.Resource;
+
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -8,7 +9,7 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import com.learning.utils.lock.mysql.MysqlLockImpl;
 
 @Component
 @Aspect
@@ -26,6 +27,5 @@ public class MysqlDistributedLockAspect {
     public void mysqlDistributedLock(JoinPoint joinPoint) {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         MysqlDistributedLock mysqlDistributedLock = signature.getMethod().getAnnotation(MysqlDistributedLock.class);
-
     }
 }

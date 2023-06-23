@@ -1,13 +1,19 @@
 package com.learning.utils.lock.mapper;
 
 
-import com.learning.utils.lock.entity.LockResource;
-
-import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.data.repository.query.Param;
+
+import com.learning.utils.lock.entity.LockResource;
 
 @Mapper
 public interface LockResourceMapper {
+
     @Select("select * from sys_lock_resource where id = #{id}")
     LockResource select(@Param("id") Long id);
 

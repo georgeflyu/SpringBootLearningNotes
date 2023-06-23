@@ -1,17 +1,18 @@
 package com.learning.utils.lock.mysql;
 
-import com.learning.utils.lock.entity.LockResource;
-import com.learning.utils.lock.service.LockResourceService;
-
-import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Component;
+
+import com.learning.utils.lock.entity.LockResource;
+import com.learning.utils.lock.service.LockResourceService;
+
+import lombok.NoArgsConstructor;
 
 @Component
 @NoArgsConstructor
@@ -38,11 +39,11 @@ public class MysqlLockImpl implements Lock {
     @Override
     public void lock() {
         while (true) {
-            try{
-                if(lockResourceService.lock(lockResource)){
+            try {
+                if (lockResourceService.lock(lockResource)) {
 
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 //System.out.println(e.getLocalizedMessage());
             }
             try {
@@ -67,11 +68,11 @@ public class MysqlLockImpl implements Lock {
     public boolean tryLock(long time, TimeUnit unit) {
         long endTime = System.currentTimeMillis() + unit.toMillis(time);
         while (System.currentTimeMillis() < endTime) {
-            try{
-                if(lockResourceService.lock(lockResource)){
+            try {
+                if (lockResourceService.lock(lockResource)) {
                     return true;
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 //System.out.println(e.getLocalizedMessage());
             }
             try {

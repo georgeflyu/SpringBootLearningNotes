@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface LogRecord {
+public @interface Log {
 
     String name() default "";
 

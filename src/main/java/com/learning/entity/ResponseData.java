@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResponseData <T> {
+public class ResponseData<T> {
 
     @AllArgsConstructor
     public enum CodeEnum {
@@ -53,8 +53,6 @@ public class ResponseData <T> {
     public static <T> ResponseData<T> SERVER_ERROR(T data) {
         return new ResponseData<>(CodeEnum.CLIENT_ERROR_CODE.code, CodeEnum.SERVER_ERROR_CODE.msg, data);
     }
-
-
 
 
 }

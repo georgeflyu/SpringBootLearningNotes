@@ -12,17 +12,11 @@ public interface LockResourceService {
 
     /**
      * 非阻塞获取锁
-     *
-     * @param lockResource
-     * @return
      */
     boolean lock(LockResource lockResource);
 
     /**
      * 释放锁
-     *
-     * @param lockResource
-     * @return
      */
     boolean unlock(LockResource lockResource);
 }

@@ -3,7 +3,7 @@ package com.learning.annotations.aspect;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.time.Duration;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
@@ -19,8 +19,8 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.alibaba.fastjson.JSONObject;
-import com.learning.annotations.LogRecord;
-import com.learning.annotations.entity.LogRecordEntity;
+import com.learning.annotations.Log;
+import com.learning.entity.LogRecord;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,24 +33,24 @@ public class LogParam {
 
     private ProceedingJoinPoint pjp;
 
-    private LogRecord logRecord;
+    private Log log;
 
-    private ZonedDateTime startTime;
+    private LocalDateTime startTime;
 
-    private ZonedDateTime endTime;
+    private LocalDateTime endTime;
 
     private Throwable throwable;
 
     private Object result;
 
-    public LogRecordEntity generateLogRecordEntity() {
+    public LogRecord generateLogRecordEntity() {
         String logType = null;
-        String logName = logRecord.name();
-        String logDescription = logRecord.description();
+        String logName = log.name();
+        String logDescription = log.description();
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = Optional.ofNullable(attributes).map(ServletRequestAttributes::getRequest).orElse(null);
         if (Objects.nonNull(request)) {
-            logType = "request";
+            logType = "interface";
         }
         String serverName = Optional.ofNullable(request).map(ServletRequest::getServerName).orElse(null);
         int serverPort = Optional.ofNullable(request).map(ServletRequest::getServerPort).orElse(0);
@@ -82,12 +82,14 @@ public class LogParam {
             exceptionMsg = getExceptionChains(throwable);
         }
 
-        return new LogRecordEntity(logType, logName, logDescription, requestMethod, requestUrl, serverName,
+        return new LogRecord(logType, logName, logDescription, requestMethod, requestUrl, serverName,
             serverPort,
             contextPath,
             queryString
-            , RequestBody, classSimpleName, method.toString(), methodArgs, exceptionMsg, result, startTime, endTime,
-            Duration.between(startTime,
+            , RequestBody, classSimpleName, method.toString(), methodArgs, exceptionMsg, JSONObject.toJSONString(result),
+            startTime,
+            endTime,
+            (int) Duration.between(startTime,
                 endTime).toMillis());
     }
 

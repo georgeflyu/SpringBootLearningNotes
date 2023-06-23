@@ -1,7 +1,7 @@
 package com.learning.annotations.aspect;
 
+import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import javax.annotation.Resource;
 
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -12,8 +12,9 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-import com.learning.annotations.LogRecord;
-import com.learning.annotations.entity.LogRecordEntity;
+import com.learning.annotations.Log;
+import com.learning.entity.LogRecord;
+
 
 @Order(1)
 @Aspect
@@ -21,31 +22,31 @@ import com.learning.annotations.entity.LogRecordEntity;
 @ConditionalOnBean(LogRecordAspect.LogRecordHandler.class)
 public class LogRecordAspect {
 
-    @Before("@annotation(com.learning.annotations.LogRecord)")
+    @Before("@annotation(com.learning.annotations.Log)")
     public void pointCut() {
     }
 
-    @Resource
+    @Resource(name = "LogRecordHandlerImpl")
     LogRecordHandler logRecordHandler;
 
-    @Around("@annotation(logRecord)")
-    public Object around(ProceedingJoinPoint pjp, LogRecord logRecord) throws Throwable {
-        LogParam logParam = new LogParam(pjp, logRecord, ZonedDateTime.now(ZoneId.of("UTC")), null, null, null);
+    @Around("@annotation(log)")
+    public Object around(ProceedingJoinPoint pjp, Log log) throws Throwable {
+        LogParam logParam = new LogParam(pjp, log, LocalDateTime.now(ZoneId.of("UTC")), null, null, null);
         Object result = null;
         try {
             result = pjp.proceed();
             logParam.setResult(result);
-            logParam.setEndTime(ZonedDateTime.now(ZoneId.of("UTC")));
-            LogRecordEntity logRecordEntity = logParam.generateLogRecordEntity();
+            logParam.setEndTime(LocalDateTime.now(ZoneId.of("UTC")));
+            LogRecord logEntity = logParam.generateLogRecordEntity();
             new Thread(() -> {
-                logRecordHandler.handle(logRecordEntity);
+                logRecordHandler.handle(logEntity);
             }).start();
         } catch (Throwable throwable) {
             logParam.setThrowable(throwable);
-            logParam.setEndTime(ZonedDateTime.now(ZoneId.of("UTC")));
-            LogRecordEntity logRecordEntity = logParam.generateLogRecordEntity();
+            logParam.setEndTime(LocalDateTime.now(ZoneId.of("UTC")));
+            LogRecord logEntity = logParam.generateLogRecordEntity();
             new Thread(() -> {
-                logRecordHandler.handle(logRecordEntity);
+                logRecordHandler.handle(logEntity);
             }).start();
             throw throwable;
         }
@@ -54,6 +55,7 @@ public class LogRecordAspect {
 
     @FunctionalInterface
     public interface LogRecordHandler {
-        int handle(LogRecordEntity logRecordEntity);
+
+        int handle(LogRecord logRecord);
     }
 }
