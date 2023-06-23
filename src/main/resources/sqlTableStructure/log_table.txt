@@ -1,0 +1,21 @@
+CREATE TABLE log_record (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    log_type VARCHAR(255),
+    log_name VARCHAR(255),
+    log_description VARCHAR(255),
+    request_method VARCHAR(255),
+    request_url VARCHAR(255),
+    server_name VARCHAR(255),
+    server_port INT,
+    context_path VARCHAR(255),
+    query_string VARCHAR(255),
+    request_body VARCHAR(255),
+    class_name VARCHAR(255),
+    method_name VARCHAR(255),
+    method_args VARCHAR(255),
+    exception_msg VARCHAR(255),
+    result text,
+    start_time DATETIME,
+    end_time DATETIME,
+    consume_millis int
+);
