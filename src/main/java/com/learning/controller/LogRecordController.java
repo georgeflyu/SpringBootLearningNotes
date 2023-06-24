@@ -39,7 +39,7 @@ public class LogRecordController {
      * @param pageRequest 分页对象
      * @return 查询结果
      */
-    @GetMapping
+    @GetMapping("/entity")
     public ResponseEntity<Page<LogRecord>> queryByPage(LogRecord logRecord, PageRequest pageRequest) {
         return ResponseEntity.ok(this.logRecordService.queryByPage(logRecord, pageRequest));
     }

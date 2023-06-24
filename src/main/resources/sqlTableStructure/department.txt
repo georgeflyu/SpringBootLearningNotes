@@ -1,0 +1,38 @@
+CREATE TABLE "public"."department" (
+  "id" int4 NOT NULL,
+  "name" varchar(255) COLLATE "pg_catalog"."default",
+  "parent_id" int4,
+  CONSTRAINT "department_pkey" PRIMARY KEY ("id")
+);
+
+
+INSERT INTO "public"."department"("id", "name", "parent_id") VALUES (1, '顶级部门', 0);
+INSERT INTO "public"."department"("id", "name", "parent_id") VALUES (2, '一级部门1', 1);
+INSERT INTO "public"."department"("id", "name", "parent_id") VALUES (3, '一级部门2', 1);
+INSERT INTO "public"."department"("id", "name", "parent_id") VALUES (4, '一级部门3', 1);
+INSERT INTO "public"."department"("id", "name", "parent_id") VALUES (5, '二级部门1', 2);
+INSERT INTO "public"."department"("id", "name", "parent_id") VALUES (6, '二级部门2', 2);
+INSERT INTO "public"."department"("id", "name", "parent_id") VALUES (7, '二级部门3', 2);
+INSERT INTO "public"."department"("id", "name", "parent_id") VALUES (8, '二级部门4', 3);
+INSERT INTO "public"."department"("id", "name", "parent_id") VALUES (9, '二级部门5', 4);
+INSERT INTO "public"."department"("id", "name", "parent_id") VALUES (10, '三级部门1', 5);
+
+
+-- 自顶向下
+with recursive tree AS (
+    select dep.id,dep.name,dep.parent_id from department dep where dep.id = 1
+
+    union all
+
+    select dep.id,dep.name,dep.parent_id from department dep inner join tree on dep.parent_id = tree.id
+) select * from tree;
+
+
+-- 自下向上
+with recursive tree as (
+    select dep.id,dep.name,dep.parent_id from department dep where dep.id =7
+
+    union all
+
+    select dep.id,dep.name,dep.parent_id from department dep inner join tree on tree.parent_id = dep.id
+) select * from tree;
