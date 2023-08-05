@@ -54,5 +54,9 @@ public class ResponseData<T> {
         return new ResponseData<>(CodeEnum.CLIENT_ERROR_CODE.code, CodeEnum.SERVER_ERROR_CODE.msg, data);
     }
 
+    public static <T> ResponseData<T> of(int code, String message, T data) {
+        return new ResponseData<>(code, message, data);
+    }
+
 
 }
